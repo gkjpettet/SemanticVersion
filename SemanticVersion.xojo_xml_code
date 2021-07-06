@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RBProject version="2021r2" FormatVersion="2" MinIDEVersion="20070100">
+<block type="Module" ID="755199999">
+ <ObjName>SemanticVersion</ObjName>
+ <ObjContainerID>0</ObjContainerID>
+ <IsClass>1</IsClass>
+ <ItemFlags>1</ItemFlags>
+ <IsInterface>0</IsInterface>
+ <Compatibility></Compatibility>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>461443071</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor(major As Integer = 0, minor As Integer = 1, patch As Integer = 0)</SourceLine>
+   <SourceLine>/// Default constructor</SourceLine>
+   <SourceLine>///</SourceLine>
+   <SourceLine>/// Defaults to `0.1.0`.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Self.Major = major</SourceLine>
+   <SourceLine>Self.Minor = minor</SourceLine>
+   <SourceLine>Self.Patch = patch</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>major As Integer = 0, minor As Integer = 1, patch As Integer = 0</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <CodeDescription>Constructs a semantic version class from a string in the form: "MAJOR.MINOR.PATCH".</CodeDescription>
+  <PartID>2018140159</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Constructor(version As String)</SourceLine>
+   <SourceLine>/// Constructs a semantic version class from a string in the </SourceLine>
+   <SourceLine>/// form: "MAJOR.MINOR.PATCH".</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Const invalidFormat = "The string should be in the form: ""MAJOR.MINOR.PATCH"""</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Split on the dot.</SourceLine>
+   <SourceLine>Var s() As String = version.Split(".")</SourceLine>
+   <SourceLine>If s.Count &lt;&gt; 3 Then Raise New InvalidArgumentException(InvalidFormat)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Validate each component.</SourceLine>
+   <SourceLine>For Each component As String In s</SourceLine>
+   <SourceLine>If Not IsNumeric(component) Then</SourceLine>
+   <SourceLine>Raise New InvalidArgumentException(InvalidFormat)</SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>// Make sure the components are &gt;= 0.</SourceLine>
+   <SourceLine>If Integer.FromString(component) &lt; 0 Then</SourceLine>
+   <SourceLine>Raise New InvalidArgumentException("Components must be &gt;= 0")</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>Next component</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>/// All good.</SourceLine>
+   <SourceLine>Self.Major = Integer.FromString(s(0))</SourceLine>
+   <SourceLine>Self.Minor = Integer.FromString(s(1))</SourceLine>
+   <SourceLine>Self.Patch = Integer.FromString(s(2))</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>version As String</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Operator_Compare</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <CodeDescription>Compares this semantic version to [other].</CodeDescription>
+  <PartID>840935423</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Operator_Compare(other As SemanticVersion) As Integer</SourceLine>
+   <SourceLine>/// Compares this semantic version to [other].</SourceLine>
+   <SourceLine>///</SourceLine>
+   <SourceLine>/// Returns:</SourceLine>
+   <SourceLine>/// ```</SourceLine>
+   <SourceLine>/// 0: Self = other</SourceLine>
+   <SourceLine>/// -1: Self &lt; other</SourceLine>
+   <SourceLine>/// 1: Self &gt; other</SourceLine>
+   <SourceLine>/// ```</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Equal?</SourceLine>
+   <SourceLine>If Self Is other Then Return 0</SourceLine>
+   <SourceLine>If Major = other.Major And Minor = other.Minor And Patch = other.Patch Then</SourceLine>
+   <SourceLine>Return 0</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Greater than `other`?</SourceLine>
+   <SourceLine>If Major &gt; other.Major Then Return 1</SourceLine>
+   <SourceLine>If Major = other.Major Then</SourceLine>
+   <SourceLine>If Minor &gt; other.Minor Then</SourceLine>
+   <SourceLine>Return 1</SourceLine>
+   <SourceLine>ElseIf Minor = other.Minor Then</SourceLine>
+   <SourceLine>If Patch &gt; other.Patch Then</SourceLine>
+   <SourceLine>Return 1</SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>Return -1</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>Else</SourceLine>
+   <SourceLine>// Major match but Self.Minor &lt; other.Minor</SourceLine>
+   <SourceLine>Return -1</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine>End If</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Self is smaller than `other`.</SourceLine>
+   <SourceLine>Return -1</SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>other As SemanticVersion</ItemParams>
+  <ItemResult>Integer</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Operator_Compare</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <CodeDescription>Compares this semantic version to a version number string in the form: "MAJOR.MINOR.PATCH".</CodeDescription>
+  <PartID>1856968703</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Operator_Compare(s As String) As Integer</SourceLine>
+   <SourceLine>/// Compares this semantic version to a version number string in </SourceLine>
+   <SourceLine>/// the form: "MAJOR.MINOR.PATCH".</SourceLine>
+   <SourceLine>///</SourceLine>
+   <SourceLine>/// Returns:</SourceLine>
+   <SourceLine>/// ```</SourceLine>
+   <SourceLine>/// 0: Self = other</SourceLine>
+   <SourceLine>/// -1: Self &lt; other</SourceLine>
+   <SourceLine>/// 1: Self &gt; other</SourceLine>
+   <SourceLine>/// ```</SourceLine>
+   <SourceLine>/// Raises an [InvalidArgumentException] if [s] is not in the correct format.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return Operator_Compare(New SemanticVersion(s))</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>s As String</ItemParams>
+  <ItemResult>Integer</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Operator_Convert</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <CodeDescription>Sets the value of this version to [s].</CodeDescription>
+  <PartID>1503563775</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Operator_Convert(s As String)</SourceLine>
+   <SourceLine>/// Sets the value of this version to [s].</SourceLine>
+   <SourceLine>///</SourceLine>
+   <SourceLine>/// Raises an [InvalidArgumentException] if [s] is not a valid version string in </SourceLine>
+   <SourceLine>/// the form: "MAJOR.MINOR.PATCH".</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Var newVersion As SemanticVersion</SourceLine>
+   <SourceLine>Try</SourceLine>
+   <SourceLine>newVersion = New SemanticVersion(s)</SourceLine>
+   <SourceLine>Catch e</SourceLine>
+   <SourceLine>Raise New InvalidArgumentException("The passed string is not in " + _</SourceLine>
+   <SourceLine>"the format: ""MAJOR.MINOR.PATCH""")</SourceLine>
+   <SourceLine>End Try</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Self.Major = newVersion.Major</SourceLine>
+   <SourceLine>Self.Minor = newVersion.Minor</SourceLine>
+   <SourceLine>Self.Patch = newVersion.Patch</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>s As String</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>ToJSON</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <CodeDescription>Returns a JSON representation of this semantic version.</CodeDescription>
+  <PartID>321279999</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function ToJSON() As String</SourceLine>
+   <SourceLine>/// Returns a JSON representation of this semantic version.</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return GenerateJSON(Self.ToString)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>String</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>ToString</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <CodeDescription>Returns this semantic version as a string in the form: "MAJOR.MINOR.PATCH"</CodeDescription>
+  <PartID>64655359</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function ToString() As String</SourceLine>
+   <SourceLine>/// Returns this semantic version as a string in the form: "MAJOR.MINOR.PATCH"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Return Major.ToString + "." + Minor.ToString + "." + Patch.ToString</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>String</ItemResult>
+ </Method>
+ <Property>
+  <ItemName>Major</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <CodeDescription>The major version number.</CodeDescription>
+  <PartID>914458623</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Major As Integer</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Major As Integer</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>// Enforce &gt;= 0.</SourceLine>
+   <SourceLine>mMajor = Max(value, 0)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return mMajor</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Minor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <CodeDescription>The minor version number.</CodeDescription>
+  <PartID>467263487</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Minor As Integer</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Minor As Integer</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>// Enforce &gt;= 0.</SourceLine>
+   <SourceLine>mMinor = Max(value, 0)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return mMinor</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mMajor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <CodeDescription>Backing field for the Major computed property.</CodeDescription>
+  <PartID>1634793471</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mMajor As Integer</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mMajor As Integer</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mMinor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <CodeDescription>Backing field for the Minor computed property.</CodeDescription>
+  <PartID>1067563007</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mMinor As Integer</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mMinor As Integer</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mPatch</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <CodeDescription>Backing field for the Patch computed property.</CodeDescription>
+  <PartID>873015295</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mPatch As Integer</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mPatch As Integer</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>Patch</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <CodeDescription>The patch version.</CodeDescription>
+  <PartID>2075222015</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Patch As Integer</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Patch As Integer</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>// Enforce &gt;= 0.</SourceLine>
+   <SourceLine>mPatch = Max(value, 0)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>Return mPatch</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <ViewBehavior>
+  <ViewProperty>
+   <ObjName>Name</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Index</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <PropertyValue>-2147483648</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Super</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Left</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Top</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Patch</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Major</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Minor</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+ </ViewBehavior>
+</block>
+</RBProject>
