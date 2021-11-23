@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<RBProject version="2021r2" FormatVersion="2" MinIDEVersion="20070100">
+<RBProject version="2021r3" FormatVersion="2" MinIDEVersion="20210300">
 <block type="Module" ID="755199999">
  <ObjName>SemanticVersion</ObjName>
- <ObjContainerID>0</ObjContainerID>
+ <ObjContainerID>971026431</ObjContainerID>
  <IsClass>1</IsClass>
  <ItemFlags>1</ItemFlags>
  <IsInterface>0</IsInterface>
@@ -14,10 +14,10 @@
   <PartID>461443071</PartID>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub Constructor(major As Integer = 0, minor As Integer = 1, patch As Integer = 0)</SourceLine>
+   <SourceLine>Sub Constructor(major As Integer = 1, minor As Integer = 0, patch As Integer = 0)</SourceLine>
    <SourceLine>/// Default constructor</SourceLine>
    <SourceLine>///</SourceLine>
-   <SourceLine>/// Defaults to `0.1.0`.</SourceLine>
+   <SourceLine>/// Defaults to `1.0.0`.</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Self.Major = major</SourceLine>
    <SourceLine>Self.Minor = minor</SourceLine>
@@ -29,7 +29,7 @@
   <AliasName></AliasName>
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
-  <ItemParams>major As Integer = 0, minor As Integer = 1, patch As Integer = 0</ItemParams>
+  <ItemParams>major As Integer = 1, minor As Integer = 0, patch As Integer = 0</ItemParams>
   <ItemResult></ItemResult>
  </Method>
  <Method>
